@@ -1,0 +1,12 @@
+{
+  "name": "src-dummy-app",
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "start": "nuxt start"
+  },
+  "dependencies": {
+    "nuxt": "~2.16.3"
+  }
+}
