@@ -11,13 +11,13 @@
         
         <ul class="nav justify-content-center">
           <li class="nav-item">
-            <a class="nav-link" href="/users">Users</a>
+            <nuxt-link class="nav-link" to="/users">Users</nuxt-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/carts">Carts</a>
+            <nuxt-link class="nav-link" to="/carts">Carts</nuxt-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/products">Products</a>
+            <nuxt-link class="nav-link" to="/products">Products</nuxt-link>
           </li>
         </ul>
 

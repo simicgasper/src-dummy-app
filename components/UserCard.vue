@@ -7,7 +7,7 @@
         <h6 class="card-subtitle mb-2 text-body-secondary">
           {{`${user.firstName} ${user.lastName}`}}
         </h6>
-        <a :href="`users/${user.id}`"
+        <nuxt-link :to="`users/${user.id}`"
           :class="'btn btn-primary mt-1' + (loading ? ' disabled' : '')"
         >
           <template v-if="!loading">Details</template>
@@ -16,7 +16,7 @@
               <span class="visually-hidden">Loading...</span>
             </div>
           </template>
-        </a>
+        </nuxt-link>
       </div>
     </div>
   </div>

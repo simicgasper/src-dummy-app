@@ -44,6 +44,33 @@
             <input v-if="user.address" type="text" v-model="user.address.address" class="form-control" id="lastname-input">
           </div>
 
+          <div v-if="carts.length > 0" class="col-12">
+            <strong>Carts:</strong>
+            <div class="row">
+              <div class="col-12 col-sm-6 text-center"
+                v-for="cart in carts" :key="cart.id"
+              >
+                <div class="border border-2 border-black rounded mx-2">
+                  <strong>Cart 1</strong>
+                  <br>
+                  <nuxt-link class="btn btn-primary my-2" :to="`/carts/${cart.id}`">
+                    Go to cart
+                  </nuxt-link>
+                </div>
+              </div>
+              <!--<div class="col-4 my-1">
+                <strong>Items:</strong> {{cart.totalQuantity}}
+              </div>
+              <div class="col-4 my-1">
+                <strong>Price:</strong> {{cart.discountedTotal}}
+              </div>-->
+              <!--<div class="col-6 my-1">
+                
+              </div>-->
+            </div>
+            
+          </div>
+
         </div>
 
       </div>
@@ -131,6 +158,7 @@ export default {
       deleting: false,
       updating: false,
       user: {},
+      carts: [],
       error: null
     }
 
@@ -141,6 +169,18 @@ export default {
     })
     .then((resp) => {
       dataObj.user = resp.data
+    })
+    .catch((err) => {
+      dataObj.error = err
+    })
+
+    // Request carts data
+    await context.$axios({
+      method: "GET",
+      url: `/users/${context.params.id}/carts`
+    })
+    .then((resp) => {
+      dataObj.carts = resp.data.carts
     })
     .catch((err) => {
       dataObj.error = err
