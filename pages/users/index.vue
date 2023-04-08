@@ -2,7 +2,7 @@
   <div class="row">
     
     <div class="col-12 text-center">
-      <h2 class="my-2">Users</h2>
+      <h2 class="my-2"><strong>Users</strong></h2>
     </div>
 
     <!--<div class="col-6"></div>
