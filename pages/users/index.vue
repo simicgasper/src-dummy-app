@@ -5,27 +5,35 @@
       <h2 class="my-2"><strong>Users</strong></h2>
     </div>
 
-    <!--<div class="col-6"></div>
-
-    <div class="col-6 text-center">
+    <div class="col-7" />
+    <div class="col-5 my-2 text-center">
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary pb-2" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-            </svg>
-          </button>
-        </div>
+        <input type="text" class="form-control" placeholder="Search"
+          aria-label="Search" v-model="searchQuery"
+        >
+        <button class="btn btn-outline-secondary pb-2" type="button" @click="clearSearch">
+          Clear
+        </button>
+        <button class="btn btn-outline-primary pb-2" type="button" @click="searchUsers">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg>
+        </button>
       </div>
-    </div>-->
+    </div>
     
 
     <UserCard v-for="user in users" :key="user.id" :user="user" />
 
     <ItemPagination :pagesCount="pagesCount" :currentPage="page"
-      @pageNavigation="getUsersPage"
+      @pageNavigation="getUsersPage" v-if="users.length > 0"
     />
+
+    <div class="alert alert-danger alert-dismissible fade show" role="alert"
+      v-if="users.length == 0"
+    >
+      No users could be retrieved or found.
+    </div>
 
   </div>
 
@@ -40,6 +48,7 @@ export default {
       page: 1,
       users: [],
       pagesCount: 0,
+      searchQuery: "",
       error: null
     }
     
@@ -94,6 +103,35 @@ export default {
       })
 
       return usersPage
+    },
+
+    async searchUsers() {
+      // Perform search query
+      await this.$axios({
+        method: "GET",
+        url: "/users/search",
+        params: {
+          limit: 12,
+          q: this.searchQuery
+        }
+      })
+      .then((resp) => {
+        this.users = (resp.data && resp.data.users) ? resp.data.users : []
+        this.pagesCount = 1
+        this.page = 1
+        this.error = null
+      })
+      .catch((err) => {
+        this.users = []
+        this.pagesCount = 0
+        this.page = 0
+        this.error = err
+      })
+    },
+
+    clearSearch() {
+      this.searchQuery = ""
+      this.getUsersPage(1)
     }
 
   }
