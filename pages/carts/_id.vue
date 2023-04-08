@@ -1,95 +1,39 @@
 <template>
-  <div v-if="user.username">
+  <div v-if="cart.id">
     <div class="row justify-content-center">
 
-      <div class="col-12 col-md-6 col-lg-5 text-center fs-5 lh-lg">
-
-        <h2 class="mb-3"><strong>User details</strong></h2>
-        <hr>
-
-        <div class="row">
-          
-          <label for="username-input" class="col-5 col-sm-4 col-md-5 col-lg-4 col-form-label">
-            <strong>Username:</strong>
-          </label>
-          <div class="col-7 col-sm-8 col-md-7 col-lg-8">
-            <input type="text" v-model="user.username" class="form-control" id="username-input">
-          </div>
-
-          <label for="firstname-input" class="col-5 col-sm-4 col-md-5 col-lg-4 col-form-label">
-            <strong>First name:</strong>
-          </label>
-          <div class="col-7 col-sm-8 col-md-7 col-lg-8">
-            <input type="text" v-model="user.firstName" class="form-control" id="firstname-input">
-          </div>
-
-          <label for="lastname-input" class="col-5 col-sm-4 col-md-5 col-lg-4 col-form-label">
-            <strong>Last name:</strong>
-          </label>
-          <div class="col-7 col-sm-8 col-md-7 col-lg-8">
-            <input type="text" v-model="user.lastName" class="form-control" id="lastname-input">
-          </div>
-
-          <label for="email-input" class="col-5 col-sm-4 col-md-5 col-lg-4 col-form-label">
-            <strong>Email:</strong>
-          </label>
-          <div class="col-7 col-sm-8 col-md-7 col-lg-8">
-            <input type="text" v-model="user.email" class="form-control" id="lastname-input">
-          </div>
-
-          <label for="address-input" class="col-5 col-sm-4 col-md-5 col-lg-4 col-form-label">
-            <strong>Address:</strong>
-          </label>
-          <div class="col-7 col-sm-8 col-md-7 col-lg-8">
-            <input v-if="user.address" type="text" v-model="user.address.address" class="form-control" id="lastname-input">
-          </div>
-
-          <div v-if="carts.length > 0" class="col-12">
-            <strong>Carts:</strong>
-            <div class="row">
-              <div class="col-12 col-sm-6 text-center"
-                v-for="cart in carts" :key="cart.id"
-              >
-                <div class="border border-2 border-black rounded mx-2">
-                  <strong>Cart 1</strong>
-                  <br>
-                  <nuxt-link class="btn btn-primary my-2" :to="`/carts/${cart.id}`">
-                    Go to cart
-                  </nuxt-link>
-                </div>
-              </div>
-              <!--<div class="col-4 my-1">
-                <strong>Items:</strong> {{cart.totalQuantity}}
-              </div>
-              <div class="col-4 my-1">
-                <strong>Price:</strong> {{cart.discountedTotal}}
-              </div>-->
-              <!--<div class="col-6 my-1">
-                
-              </div>-->
-            </div>
-            
-          </div>
-
-        </div>
-
+      <div class="col-12 text-center">
+        <h2 class="mb-3"><strong>Cart {{cart.id}}</strong></h2>
+        <h3 class="mb-3"><strong>Products:</strong></h3>
       </div>
 
-
-      <!-- User image -->
-      <div class="col-12 col-md-6 col-lg-5 text-center mt-3 mt-md-0 ">
-        <img :src="user.image" class="border border-2 border-black rounded">
+      <div v-for="product in cart.products" :key="product.id" class="col-12 col-md-6 my-2">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{product.title}}</h5>
+            <p class="card-text">
+              Quantity: {{product.quantity}}
+              <br>
+              <nuxt-link class="btn btn-primary mt-2" :to="`/products/${product.id}`">
+                Go to product
+              </nuxt-link>
+              <button class="btn btn-danger mt-2" @click="removeProduct(product.id)">
+                Remove from cart
+              </button>
+            </p>
+          </div>
+        </div>
       </div>
 
       <hr class="my-3">
 
       <!-- Controls -->
       <div class="col-12 text-center">
-        <button @click="updateUser"
+        <button @click="updateCart"
           :class="'btn btn-primary btn-lg' + (disableButtons ? ' disabled' : '')"
         >
           <span v-if="!updating">
-            Update user data
+            Update cart data
           </span>
           <template v-else>
             <div class="spinner-border spinner-border-sm" role="status">
@@ -99,10 +43,10 @@
           </template>
         </button>
         <button :class="'btn btn-danger btn-lg' + (disableButtons ? ' disabled' : '')"
-          type="button" data-bs-toggle="modal" data-bs-target="#delete-user-modal"
+          type="button" data-bs-toggle="modal" data-bs-target="#delete-cart-modal"
         >
           <template v-if="!deleting">
-            Delete user
+            Delete cart
           </template>
           <template v-if="deleting">
             <div class="spinner-border spinner-border-sm" role="status">
@@ -120,20 +64,20 @@
     <div class="col-12 mt-3" id="alert-container" />
 
 
-    <!-- User delete modal -->
-    <div class="modal fade" id="delete-user-modal" tabindex="-1" aria-hidden="true">
+    <!-- Cart delete modal -->
+    <div class="modal fade" id="delete-cart-modal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Delete user</h5>
+            <h5 class="modal-title">Delete cart</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to delete this user?</p>
+            <p>Are you sure you want to delete this cart?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteUser">
-              Delete user
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteCart">
+              Delete cart
             </button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           </div>
@@ -145,7 +89,7 @@
   </div>
 
   <div v-else class="alert alert-danger alert-dismissible fade show" role="alert">
-    There was an error retrieving user data.
+    There was an error retrieving cart data.
   </div>
 
 </template>
@@ -159,30 +103,17 @@ export default {
       deleted: false,
       deleting: false,
       updating: false,
-      user: {},
-      carts: [],
+      cart: {},
       error: null
     }
 
-    // Request user data
+    // Request cart data
     await context.$axios({
       method: "GET",
-      url: `/users/${context.params.id}`
+      url: `/carts/${context.params.id}`
     })
     .then((resp) => {
-      dataObj.user = resp.data
-    })
-    .catch((err) => {
-      dataObj.error = err
-    })
-
-    // Request carts data
-    await context.$axios({
-      method: "GET",
-      url: `/users/${context.params.id}/carts`
-    })
-    .then((resp) => {
-      dataObj.carts = resp.data.carts
+      dataObj.cart = resp.data
     })
     .catch((err) => {
       dataObj.error = err
@@ -200,26 +131,26 @@ export default {
 
   methods: {
 
-    async updateUser() {
+    async updateCart() {
       let startTime = Date.now()
       this.updating = true
 
-      // Request to update user data
+      // Request to update cart data
       await this.$axios({
         method: "PUT",
-        url: `/users/${this.user.id}`,
-        data: this.user
+        url: `/carts/${this.cart.id}`,
+        data: this.cart
       })
       .then((resp) => {
         let handleUpdateResp = function(vue) {
-          vue.user = resp.data
+          vue.cart = resp.data
           vue.updating = false
 
           // Show success alert
           let alertContainer = document.getElementById("alert-container")
           alertContainer.innerHTML = `
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-              User data was successfully updated.
+              Cart data was successfully updated.
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           `
@@ -240,25 +171,25 @@ export default {
         let alertContainer = document.getElementById("alert-container")
         alertContainer.innerHTML = `
           <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            There was an error updating user data.
+            There was an error updating cart data.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         `
       })
     },
 
-    async deleteUser() {
+    async deleteCart() {
       let startTime = Date.now()
       this.deleting = true
 
-      // Request to delete user data
+      // Request to delete cart data
       await this.$axios({
         method: "DELETE",
-        url: `/users/${this.user.id}`
+        url: `/carts/${this.cart.id}`
       })
       .then((resp) => {
         let handleDeleteResp = function(vue) {
-          vue.user = resp.data
+          //vue.cart = resp.data
           vue.deleting = false
           vue.deleted = true
 
@@ -266,7 +197,7 @@ export default {
           let alertContainer = document.getElementById("alert-container")
           alertContainer.innerHTML = `
             <div class="alert alert-success alert-dismissible fade show mx-3" role="alert">
-              User was successfully deleted. Redirecting you back to users page...
+              Cart was successfully deleted. Redirecting you back to carts page...
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           `
@@ -274,10 +205,10 @@ export default {
           // Redirect
           setTimeout(() => {
               // First, dismiss modal
-              let deleteModal = bootstrap.Modal.getInstance(document.getElementById("delete-user-modal"))
+              let deleteModal = bootstrap.Modal.getInstance(document.getElementById("delete-cart-modal"))
               deleteModal.hide()
               // then, redirect
-              vue.$router.push("/users")
+              vue.$router.push("/carts")
             },
             2500
           )
@@ -298,11 +229,19 @@ export default {
         let alertContainer = document.getElementById("alert-container")
         alertContainer.innerHTML = `
           <div class="alert alert-danger alert-dismissible fade show mx-3" role="alert">
-            There was an error deleting this user.
+            There was an error deleting this cart.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         `
       })
+    },
+
+    removeProduct(productId) {
+      this.cart.products = this.cart.products.filter((elem) => {
+        if (elem.id === productId) return false
+        return true
+      })
+
     }
   }
 
