@@ -160,7 +160,6 @@ export default {
 
     async updateUser() {
       let startTime = Date.now()
-      let delayTime = 750
       this.updating = true
 
       // Request to update user data
@@ -185,15 +184,11 @@ export default {
         }
 
         // Handle delay
-        if (Date.now() - startTime > delayTime) {
-          handleUpdateResp(this)
-        } else {
-          setTimeout(() => {
-              handleUpdateResp(this)
-            },
-            delayTime - Date.now() + startTime
-          )
-        }
+        setTimeout(() => {
+            handleUpdateResp(this)
+          },
+          750 - Date.now() + startTime
+        )
       })
       .catch((err) => {
         this.error = err
@@ -212,7 +207,6 @@ export default {
 
     async deleteUser() {
       let startTime = Date.now()
-      let delayTime = 1000
       this.deleting = true
 
       // Request to delete user data
@@ -248,15 +242,11 @@ export default {
         }
 
         // Handle delay
-        if (Date.now() - startTime > delayTime) {
-          handleDeleteResp(this)
-        } else {
-          setTimeout(() => {
-             handleDeleteResp(this)
-            },
-            delayTime - Date.now() + startTime
-          )
-        }
+        setTimeout(() => {
+            handleDeleteResp(this)
+          },
+          Math.max(1000 - Date.now() + startTime, 0)
+        )
       })
       .catch((err) => {
         this.error = err

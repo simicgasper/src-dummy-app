@@ -5,8 +5,8 @@
       <h2 class="my-2"><strong>Users</strong></h2>
     </div>
 
-    <div class="col-7" />
-    <div class="col-5 my-2 text-center">
+    <div class="col-0 col-md-6 col-xl-7" />
+    <div class="col-12 col-md-6 col-xl-5 my-2 text-center">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Search"
           aria-label="Search" v-model="searchQuery"
@@ -23,10 +23,10 @@
     </div>
     
 
-    <UserCard v-for="user in users" :key="user.id" :user="user" />
+    <UserCard v-for="user in users" :key="user.id" :user="user" :loading="loading" />
 
     <ItemPagination :pagesCount="pagesCount" :currentPage="page"
-      @pageNavigation="getUsersPage" v-if="users.length > 0"
+      @pageNavigation="getUsersPage" v-if="pagesCount > 1"
     />
 
     <div class="alert alert-danger alert-dismissible fade show" role="alert"
@@ -49,6 +49,7 @@ export default {
       users: [],
       pagesCount: 0,
       searchQuery: "",
+      loading: false,
       error: null
     }
     
@@ -75,6 +76,8 @@ export default {
   methods: {
 
     async getUsersPage(page) {
+      this.loading = true
+      let startTime = Date.now()
       let usersPage = {
         page,
         users: [],
@@ -91,21 +94,33 @@ export default {
         }
       })
       .then((resp) => {
-        this.users = (resp.data && resp.data.users) ? resp.data.users : []
-        this.pagesCount =
-          (resp.data && resp.data.total) ? Math.ceil(resp.data.total/12) : 0
-        this.page = page
-        this.error = null
+        let handleUsersResp = function(vue) {
+          vue.users = (resp.data && resp.data.users) ? resp.data.users : []
+          vue.pagesCount = (resp.data && resp.data.total) ? Math.ceil(resp.data.total/12) : 0
+          vue.page = page
+          vue.error = null
+          vue.loading = false
+        }
+
+        setTimeout(() => {
+            handleUsersResp(this)
+          },
+          Math.max(0, startTime + 500 - Date.now())
+        )
       })
       .catch((err) => {
         this.page = 0
         this.error = err
+        this.loading = false
       })
 
       return usersPage
     },
 
     async searchUsers() {
+      this.loading = true
+      let startTime = Date.now()
+
       // Perform search query
       await this.$axios({
         method: "GET",
@@ -116,16 +131,26 @@ export default {
         }
       })
       .then((resp) => {
-        this.users = (resp.data && resp.data.users) ? resp.data.users : []
-        this.pagesCount = 1
-        this.page = 1
-        this.error = null
+        let handleUsersResp = function(vue) {
+          vue.users = (resp.data && resp.data.users) ? resp.data.users : []
+          vue.pagesCount = 1
+          vue.page = 1
+          vue.error = null
+          vue.loading = false
+        }
+
+        setTimeout(() => {
+            handleUsersResp(this)
+          },
+          Math.max(0, startTime + 750 - Date.now())
+        )
       })
       .catch((err) => {
         this.users = []
         this.pagesCount = 0
         this.page = 0
         this.error = err
+        this.loading = false
       })
     },
 

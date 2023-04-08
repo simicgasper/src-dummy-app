@@ -7,8 +7,15 @@
         <h6 class="card-subtitle mb-2 text-body-secondary">
           {{`${user.firstName} ${user.lastName}`}}
         </h6>
-        <a :href="`users/${user.id}`" class="btn btn-primary mt-1">
-          Details
+        <a :href="`users/${user.id}`"
+          :class="'btn btn-primary mt-1' + (loading ? ' disabled' : '')"
+        >
+          <template v-if="!loading">Details</template>
+          <template v-else>
+            <div class="spinner-border spinner-border-sm" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </template>
         </a>
       </div>
     </div>
@@ -18,7 +25,8 @@
 <script>
 export default {
   props: [
-    'user'
+    'user',
+    'loading'
   ]
 }
 </script>
