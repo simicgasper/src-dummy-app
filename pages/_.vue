@@ -1,10 +1,4 @@
-<template>
-  <div class="row">
-    <div class="col">
-      
-    </div>
-  </div>
-</template>
+<template></template>
 
 <script>
 export default {

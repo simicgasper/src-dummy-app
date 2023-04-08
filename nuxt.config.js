@@ -1,5 +1,7 @@
 export default {
+
   head: {
+
     title: "SRC Dummy App",
     
     meta: [
@@ -23,5 +25,15 @@ export default {
         crossorigin: "anonymous"
       }
     ]
+  },
+
+  components: true,
+
+  modules: [
+    "@nuxtjs/axios"
+  ],
+
+  axios: {
+    baseURL: "https://dummyjson.com/"
   }
 }
