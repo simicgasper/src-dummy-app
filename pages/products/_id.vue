@@ -75,10 +75,12 @@
 
       </div>
 
+      <hr class="my-3">
+
       <!-- Controls -->
-      <div class="col-12 text-center mt-3">
+      <div class="col-12 text-center">
         <button @click="updateProduct"
-          :class="'btn btn-primary' + (disableButtons ? ' disabled' : '')"
+          :class="'btn btn-primary btn-lg' + (disableButtons ? ' disabled' : '')"
         >
           <span v-if="!updating">
             Update product data
@@ -90,7 +92,7 @@
             Updating...
           </template>
         </button>
-        <button :class="'btn btn-danger' + (disableButtons ? ' disabled' : '')"
+        <button :class="'btn btn-danger btn-lg' + (disableButtons ? ' disabled' : '')"
           type="button" data-bs-toggle="modal" data-bs-target="#delete-product-modal"
         >
           <template v-if="!deleting">
@@ -185,6 +187,12 @@ export default {
 
     return dataObj
 
+  },
+
+  beforeMount() {
+    if (!this.$checkLogin()) {
+      window.location = '/login'
+    }
   },
 
   computed: {
