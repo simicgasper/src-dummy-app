@@ -40,6 +40,14 @@
 
 </template>
 
+
+<style scoped>
+
+
+
+</style>
+
+
 <script>
 export default {
   async asyncData(context) {
@@ -106,7 +114,7 @@ export default {
 
         setTimeout(
           () => { handleProductsResp(this)},
-          Math.max(0, startTime + 500 - Date.now())
+          Math.max(0, startTime + 0 - Date.now())
         )
       })
       .catch((err) => {

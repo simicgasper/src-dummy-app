@@ -1,4 +1,4 @@
-export default (context, inject) => {
+export default (_, inject) => {
   inject('checkLogin', () => {
     // Check if login data exists
     let loginTime = window.localStorage.getItem('loginTime')
