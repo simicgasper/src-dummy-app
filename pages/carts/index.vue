@@ -54,11 +54,6 @@ export default {
     return dataObj
   },
 
-  beforeMount() {
-    if (!this.$checkLogin()) {
-      window.location = '/login'
-    }
-  },
 
   methods: {
 

@@ -41,6 +41,7 @@
 
 <style>
 
+/* Center the google login button */
 .google-login-wrap {
   width: 250px;
   margin: auto;
@@ -52,13 +53,6 @@
 export default {
 
   layout: "noNav",
-  
-  mounted() {
-    var handleLoginResp = function(loginResp) {
-      console.log(loginResp)
-      window.location = '/users'
-    }
-  }
 
 }
 </script>

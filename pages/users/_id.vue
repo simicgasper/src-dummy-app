@@ -183,12 +183,6 @@ export default {
 
   },
 
-  beforeMount() {
-    if (!this.$checkLogin()) {
-      window.location = '/login'
-    }
-  },
-
   computed: {
     disableButtons() {
       return this.deleting || this.updating || this.deleted

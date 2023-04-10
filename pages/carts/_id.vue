@@ -123,11 +123,6 @@ export default {
 
   },
 
-  beforeMount() {
-    if (!this.$checkLogin()) {
-      window.location = '/login'
-    }
-  },
 
   computed: {
     disableButtons() {

@@ -19,6 +19,9 @@
           <li class="nav-item">
             <nuxt-link class="nav-link" to="/products">Products</nuxt-link>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click.prevent="logout"><strong>Logout</strong></a>
+          </li>
         </ul>
 
       </div>
@@ -30,3 +33,23 @@
   
   </div>
 </template>
+
+
+<script>
+export default {
+  
+  methods: {
+    logout() {
+      this.$logout()
+      window.location = "/login"
+    }
+  },
+
+  beforeMount() {
+    if (!this.$checkLogin()) {
+      window.location = '/login'
+    }
+  },
+
+}
+</script>

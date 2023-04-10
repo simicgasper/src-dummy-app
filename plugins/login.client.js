@@ -19,4 +19,9 @@ export default (_, inject) => {
     return true
 
   })
+
+  inject('logout', () => {
+    window.localStorage.removeItem('loginTime')
+    window.localStorage.removeItem('loginResp')
+  })
 }
